@@ -4,15 +4,17 @@
 # Once done, uncomment this line:
 # find_package(Corrosion REQUIRED)
 
-include(FetchContent)
+# include(FetchContent)
 
-FetchContent_Declare(
-    Corrosion
-    GIT_REPOSITORY https://github.com/AndrewGaspar/corrosion.git
-    GIT_TAG origin/master # Optionally specify a version tag or branch here
-)
+# FetchContent_Declare(
+#     Corrosion
+#     GIT_REPOSITORY https://github.com/AndrewGaspar/corrosion.git
+#     GIT_TAG origin/master # Optionally specify a version tag or branch here
+# )
 
-FetchContent_MakeAvailable(Corrosion)
+# FetchContent_MakeAvailable(Corrosion)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../corrosion ${CMAKE_CURRENT_BINARY_DIR}/corrosion)
 
 corrosion_import_crate(MANIFEST_PATH ../native/Cargo.toml IMPORTED_CRATES imported_crates)
 target_link_libraries(${BINARY_NAME} PRIVATE ${imported_crates})

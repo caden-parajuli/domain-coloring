@@ -1,3 +1,7 @@
+# Rust-Dart bridge
+native/**/bridge_*
+lib/**/bridge_*
+
 # Miscellaneous
 *.class
 *.log
