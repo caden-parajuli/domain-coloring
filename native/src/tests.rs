@@ -1,7 +1,6 @@
 use crate::domain_color;
 use crate::domain_color::DCOptions;
 use std::io::Write;
-
 use tempfile::Builder;
 
 #[test]
@@ -11,9 +10,9 @@ fn color_bmp_test() {
         .tempfile()
         .expect("Tempfile could not be created");
 
-    let bmp = domain_color::color_bmp(
-        1000,
-        1000,
+    let bmp = crate::domain_color::color_bmp(
+        500,
+        500,
         "z",
         DCOptions {
             xmin: -5.0,

@@ -3,14 +3,6 @@ pub use num::complex::Complex;
 use num::complex::ComplexFloat;
 use std::f64::consts::PI as PI64;
 
-// Only need this if you expose parsing to Dart
-// #[frb(mirror(Complex))]
-// #[repr(C)]
-// pub struct _Complex<T> {
-//     pub re: T,
-//     pub im: T,
-// }
-
 struct Rgb {
     pub r: u8,
     pub g: u8,
@@ -40,7 +32,7 @@ pub type ComplexFunction = dyn Fn(Complex<f32>) -> Complex<f32>;
 #[allow(unused_variables)]
 fn parse(fun_str: &str) -> Result<Box<ComplexFunction>, String> {
     // Parse the complex function
-    Ok(Box::new(|z| z))
+    Ok(Box::new(|z| z * (z + Complex::new(2.0, 1.5))))
 }
 
 fn good_arg(z: Complex<f32>) -> f64 {
@@ -107,16 +99,15 @@ pub fn color_bmp(width: usize, height: usize, fun_str: &str, options: DCOptions)
     let x_step: f32 = (options.xmax - options.xmin) / (width as f32);
     let y_step: f32 = (options.ymax - options.xmin) / (height as f32);
     let mut rgb: Rgb;
-    for y_px in 0..height {
-        for x_px in 0..(width - 2) {
-            x = options.xmin + x_px as f32 * x_step; // Not sure if this should use width - 1
-            y = options.ymin + y_px as f32 * y_step; // Not sure if this should use height - 1
+    for y_px in 0..=(height - 1) {
+        for x_px in 0..=(width - 1) {
+            x = options.xmin + x_px as f32 * x_step;
+            y = options.ymin + y_px as f32 * y_step;
             rgb = color_bytes(function(Complex::new(x, y)));
-            // println!("{:?}", rgb);
             // Consider get_unchecked with a debug assertion
-            buffer[header_size + y_px * 3 * width + 3 * x_px] = rgb.b;
-            buffer[header_size + y_px * 3 * width + 3 * x_px + 1] = rgb.g;
-            buffer[header_size + y_px * 3 * width + 3 * x_px + 2] = rgb.r;
+            buffer[header_size + 3 + y_px * 3 * width + 3 * x_px] = rgb.b;
+            buffer[header_size + 3 + y_px * 3 * width + 3 * x_px + 1] = rgb.g;
+            buffer[header_size + 3 + y_px * 3 * width + 3 * x_px + 2] = rgb.r;
         }
     }
     buffer

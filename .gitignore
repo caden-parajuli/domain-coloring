@@ -7,6 +7,7 @@
 *.bin
 
 # Rust-Dart bridge
+**/bridge_generated.*
 native/**/bridge_*
 lib/**/bridge_*
 launch.json
