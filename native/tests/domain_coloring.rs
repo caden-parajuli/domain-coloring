@@ -1,5 +1,4 @@
-use crate::domain_color;
-use crate::domain_color::DCOptions;
+use native::domain_color::{self, DCOptions};
 use std::io::Write;
 use tempfile::Builder;
 

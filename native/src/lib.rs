@@ -1,8 +1,6 @@
 mod api;
+pub mod ast;
 mod bridge_generated;
 pub mod domain_color;
-mod lexing;
-mod parsing;
-
-#[cfg(test)]
-mod tests;
+pub mod lexer;
+pub mod parser;

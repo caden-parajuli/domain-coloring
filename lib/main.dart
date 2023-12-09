@@ -38,11 +38,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final int imageWidth = 100;
-  final int imageHeight = 100;
-  final bool makePlot = true;
+  final int imageWidth = 1000;
+  final int imageHeight = 1000;
+  bool makePlot = false;
   bool plotted = false;
-  late final Uint8List bmp;
+  late Uint8List bmp;
   final functionController = TextEditingController();
 
   @override
@@ -67,14 +67,17 @@ class _MyHomePageState extends State<MyHomePage> {
     // Plot if needed, otherwise show a placeholder
     Widget plot;
 
+    print("makePlot: $makePlot");
+
     if (makePlot) {
       if (!plotted) {
+        print("plotting...");
         plot = FutureBuilder(
             future: api.colorBmp(
               width: imageWidth,
               height: imageHeight,
               funStr: functionController.text,
-              options: const DCOptions(xmin: -3, xmax: 3, ymin: -3, ymax: 3),
+              options: const DCOptions(xmin: -5, xmax: 5, ymin: -5, ymax: 5),
             ),
             builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
               if (snapshot.hasData) {
@@ -116,14 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            AspectRatio(
-              aspectRatio: 1.0,
-              child: 
-              Flexible(
-                fit: FlexFit.tight,
-                child: plot,
-              ),
-            ),
+            AspectRatio(aspectRatio: 1.0, child: plot),
             Flexible(
               fit: FlexFit.loose,
               flex: 1,
@@ -136,27 +132,32 @@ class _MyHomePageState extends State<MyHomePage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: TextFormField(
-                      controller: functionController,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: 'f(z)',
-                        hintText: 'Enter a function of z',
+                        controller: functionController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'f(z)',
+                          hintText: 'Enter a function of z',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) { return 'Please enter some text'; }
-                        return null;
-                      },
                     ),
-                  ),
-                      FilledButton(
-                          onPressed: () {
-                            // Validate will return true if the form is valid, or false if
-                            // the form is invalid.
-                            if (_formKey.currentState!.validate()) {
-                              // Process data.
-                            }
-                          },
-                          child: const Text("Plot")),
+                    FilledButton(
+                        onPressed: () {
+                          // Validate will return true if the form is valid, or false if
+                          // the form is invalid.
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              makePlot = true;
+                              plotted = false;
+                            });
+                          }
+                        },
+                        child: const Text("Plot")),
                     const Spacer(flex: 6),
                   ],
                 ),

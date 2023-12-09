@@ -1,0 +1,18 @@
+
+<expr>   ::= <term>
+           | <term> {<PLUS> <term>}
+
+<term>   ::= <factor>
+           | <factor> {<MULT> <term>}
+           | <factor> {<factor>}
+
+<factor> ::= <base>
+           | <base> {<POW> <base>}
+
+<base>   ::= <FLOAT>
+           | <COMPLEXI>
+           | <VARZ>
+           | <FUNCTION> <par_expr>
+           | <par_expr>
+
+<par_expr> ::= <LPAREN> expr <RPAREN>
