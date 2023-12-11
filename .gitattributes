@@ -6,3 +6,4 @@ macos/** linguist-vendored
 windows/** linguist-vendored
 docs/** linguist-vendored
 corrosion/** linguist-vendored
+justfile linguist-vendored
