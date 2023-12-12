@@ -13,7 +13,8 @@ jobs:
       url: ${{steps.deployment.outputs.page_url}}
       
     steps:
-    - run: chmod -c -R +rX "web/"
+    - run: pwd
+    - run: ls
     - uses: actions/download-artifact@master
       with:
         name: web
