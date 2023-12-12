@@ -2,7 +2,6 @@ use crate::parser;
 use hsluv;
 pub use num::complex::Complex;
 use num::complex::ComplexFloat;
-use rayon::prelude::*;
 use std::f64::consts::PI as PI64;
 
 struct Rgb {
