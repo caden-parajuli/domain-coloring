@@ -1,0 +1,65 @@
+name: Web/GH Pages
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    steps:
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        - uses: actions/checkout@v3
+
+        # Justfile
+        - uses: extractions/setup-just@v1
+
+        - name: Install LLVM and Clang
+          uses: KyleMayes/install-llvm-action@v1
+          with:
+            version: "14.0"
+        - name: Symlink libclang.so (Linux)
+          if: contains(matrix.os, 'ubuntu')
+          run: sudo ln -s libclang-14.so.1 /lib/x86_64-linux-gnu/libclang.so
+          working-directory: ${{ env.LLVM_PATH }}/lib
+          
+        - name: Install Rust minimal nightly
+          uses: actions-rs/toolchain@v1
+          with:
+            profile: minimal
+            toolchain: nightly
+            components: rustfmt, rust-src
+        # - run: rustup +nightly component add rust-src
+        - run: rustup +nightly target add wasm32-unknown-unknown
+
+        - name: Set up cargo cache
+          uses: actions/cache@v3
+          continue-on-error: false
+          with:
+            path: |
+              ~/.cargo/bin/
+              ~/.cargo/registry/index/
+              ~/.cargo/registry/cache/
+              ~/.cargo/git/db/
+              target/
+            key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+            restore-keys: ${{ runner.os }}-cargo-
+
+        # - run: cargo install cargo-expand
+        - name: Install Bridge codegen tool
+          run: cargo install cargo-expand flutter_rust_bridge_codegen
+            
+        - name: Get Flutter
+          uses: subosito/flutter-action@v2
+          with:
+            channel: 'stable'
+            cache: true
+            
+        - name: Get dependencies
+          run: flutter pub get
+        - name: Gegnerate Flutter-Rust bindings
+          run: just gen-gh
+        - name: Build for web
+          run: flutter build web
