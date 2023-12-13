@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/download-artifact@master
       with:
-        name: web
+        name: page
         path: .
     - uses: actions/configure-pages@v1
     - uses: actions/upload-pages-artifact@v1
@@ -90,6 +90,6 @@ jobs:
         - name: Upload artifact
           uses: actions/upload-artifact@master
           with:
-            name: web
+            name: page
             path: build/web
             if-no-files-found: error

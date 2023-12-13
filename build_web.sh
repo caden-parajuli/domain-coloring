@@ -20,5 +20,5 @@ export CARGO_TERM_COLOR='always'
 
 wasm-pack build -t no-modules -d $wasmOutput --no-typescript --out-name $crateName --release $crateDir -- -Z build-std=std,panic_abort
 wasm-bindgen $crateDir/target/wasm32-unknown-unknown/release/$crateName.wasm --out-dir $wasmOutput --no-typescript --target no-modules
-flutter build web
+flutter build web --base-href "/domain-coloring/"
 chmod -c -R +rX "build/web/"
